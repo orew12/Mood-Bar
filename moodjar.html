@@ -48,6 +48,13 @@
                     font-family: "Shantell Sans", cursive;
                     font-size: 14px;
                     background: #fdf6ee;
+                    transition: transform 0.15s ease;
+                    
+               }
+               .jar:hover {
+                    transform: translateY(-6px);
+                    cursor: pointer;
+                    
                }
           </style>
      </head>
@@ -55,17 +62,22 @@
           <div id = "scene"> 
              <div id = "popout"> What bars would you like to select? 
              <div id = "jars"> 
-                <div class="jar">sad</div>
-                <div class="jar">happy</div>
-                <div class="jar">joy</div>
-                <div class="jar">envy</div>
-                <div class="jar">angry</div>
-                <div class="jar">lonely</div>
-                <div class="jar">envy</div>
-                <div class = "jar">disghust</div>
+                <div class="jar" data-bar="sad">sad</div>
+                <div class="jar" data-bar="happy">happy</div>
+                <div class="jar" data-bar ="envy">envy</div>
+                <div class="jar" data-bar="angry">angry</div>
+                <div class="jar" data-bar="lonely">lonely</div>
+                <div class="jar" data-bar="disghust">disghust</div>
              </div> 
           </div>
      </div>
+     <script>
+          const jars = document.qureyselector(".jar");
+          jars.forEach(jar => {
+               jar.addEventListener("click", () => {
+                    console.log(jar.dataset.bar);
+               });
+          });
 
 
      </body>
