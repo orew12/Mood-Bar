@@ -14,6 +14,9 @@
                     bottom: 0;
                     left: 0;
                     background: #fdf6ee;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
 
                }
                #popout {
@@ -27,10 +30,43 @@
                     color: #1a1a1a;
                     text-align: center;
                }
+               #jars {
+                    display: flex;
+                    justify-content: center;
+                    gap: 18px;
+                    margin-top: 30px;
+               }
+               .jar {
+                    width: 70px;
+                    height: 90px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 8px 8px 14px 14px;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                    padding-bottom: 8px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 14px;
+                    background: #fdf6ee;
+               }
           </style>
      </head>
      <body>
-          <div id = "popout"> What bars would you like to select? </div>
+          <div id = "scene"> 
+             <div id = "popout"> What bars would you like to select? 
+             <div id = "jars"> 
+                <div class="jar">sad</div>
+                <div class="jar">happy</div>
+                <div class="jar">joy</div>
+                <div class="jar">envy</div>
+                <div class="jar">angry</div>
+                <div class="jar">lonely</div>
+                <div class="jar">envy</div>
+                <div class = "jar">disghust</div>
+             </div> 
+          </div>
+     </div>
+
 
      </body>
 </html>
