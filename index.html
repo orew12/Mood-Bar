@@ -1,0 +1,580 @@
+<html>
+     <head>
+          <title> Mood Bar </title>
+          <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Shantell+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+          <style>
+               html,body {
+                    margin: 0;
+                    height: 100%;
+               }
+               #scene {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    bottom: 0;
+                    left: 0;
+                    background: #fdf6ee;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+               }
+               #popout {
+                    width: 520px;
+                    padding: 40px 30px;
+                    background: #fff;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 18px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 26px;
+                    color: #1a1a1a;
+                    text-align: center;
+               }
+               #popout.closed {
+                    position: absolute;
+                    top: 24px;
+                    left: 24px;
+                    width: auto;
+                    padding: 12px 18px;
+                    font-size:15px;
+                    opacity: 0.85;
+               }
+               #popout.closed #jars, #popout.closed #done, #popout.closed .question {
+                    display: none;
+               }
+               #popout.closed #done {
+                    display: none;
+               }
+               #jars {
+                    display: flex;
+                    justify-content: center;
+                    gap: 18px;
+                    margin-top: 30px;
+               }
+
+               .jar {
+                    width: 70px;
+                    height: 90px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 8px 8px 14px 14px;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                    padding-bottom: 8px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 14px;
+                    background: #fdf6ee;
+                    transition: transform 0.15s ease;
+                    position: relative;
+                    overflow: hidden;
+                    
+               }
+               .jar:hover {
+                    transform: translateY(-6px);
+                    cursor: pointer;
+                    
+               }
+               .jar.selected {
+                    background: #1a1a1a;
+                    color: #fff;
+
+               }
+               .jar::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 0;
+                    background: #f4a6b8;
+                    transition: height 0.3s ease;
+               }
+               .jar.selected::after {
+                    height: 100%;
+               }
+               #done {
+                    margin-top: 26px;
+                    padding: 10px 24px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 18px;
+                    background: #fff;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 30px;
+                    cursor: pointer;
+               }
+               #shelf {
+                    position: absolute; 
+                    top: 24px;
+                    right: 24px;
+                    display: flex;
+                    gap: 10px;
+                    font-family: "Shantell Sans", cursive;
+
+               }
+               #shelf .chip {
+                    padding: 8px 14px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 30px;
+                    background: #f4a6b8;
+                    font-size: 14px;
+               }
+               #desk {
+                    position: absolute;
+                    inset: 0;
+                    background: #f6e7d8;
+                    display: none;
+               }
+               #desk.show {
+                    display: block;
+               }
+               #deskTable {
+                    position: relative;
+                    left: 50%; top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 620px;
+                    height: 380px;
+                    background: linear-gradient(170deg, #d8a97a, #c08a5c 60%, #a9724a);
+                    border-radius: 22px;
+                    box-shadow: 0 40px 60px -20px rgba(90,55,30,.45),
+                    inset 0 2px 0 rgba(255,255,255,.35),
+                    inset 0 -8px 2px rgba(0,0,0,.15);
+                    overflow: hidden;
+               }
+               #deskTable::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius:22px;
+                    background: 
+                    repeating-linear-gradient(92deg, rgba(120,70,40,.14) 0 2px, transparent 2px 26px),
+                    repeating-linear-gradient(88deg, rgba(255,255,255,0.7) 0 1px, transparent 1px 40px);
+                    opacity: 0.8;
+               }
+               .poster {
+                    position: absolute;
+                    border: 6px solid #fff;
+                    border-radius: 4px;
+                    box-shadow: 0 8px 18px rgba(80,50,30,.22);
+                    background-size: cover;
+                    background-position: center;
+                    transform: rotate(var(--r));
+               }
+               .poster-slot {
+                    position: absolute;
+                    border: 2px dashed #c9a98c;
+                    border-radius: 6px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 14px;
+                    color: #b08a68;
+               }
+               .deskjar {
+                    position: absolute;
+                    width: 70px;
+                    height: 90px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 8px 8px 14px 14px;
+                    background: #fdf6ee;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                    padding-bottom: 8px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 14px;
+                    color: #1a1a1a;
+                    box-shadow: 0 8px 16px rgba(80,50,30,.18);
+                    transform: rotate(var(--r));
+               }
+               .deskjar .fill {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 100%;
+                    background: #f4a6b8;
+                    z-index: 0;
+               }
+               .deskjar span {
+                    position: relative;
+                    z-index: 1
+               }
+               #ballPopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    font-family: "Shantell Sans", cursive;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+               }
+               #ballPopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #f7b6c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+               .hidden {
+                    display: none !important; 
+               }
+               #notePopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    width: min(360px, 90vw);
+                    font-family: "Shantell Sans", sans-serif;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+               }
+               #notePopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #fb76c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+
+               #noteInput {
+                    font-family: "Shantell Sans", sans-serif;
+                    font-size: 15px;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 14px;
+                    padding: 10px;
+                    min-height: 90px;
+                    resize: none;
+                    background: #fffdfa;
+                    outline: none;
+               }
+               #historyPopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    width: min(420px, 90vw);
+                    font-family: "Shantell Sans", sans-serif;
+                    box-shadow: 0 10px 30px  rgba(0,0,0,0.15);
+               }
+               #historyPopout > p {
+                    margin: 0;
+                    font-size: 18px;
+               }
+
+               #historyList {
+                    overflow-y: auto;
+                    max-height: 50vh;
+               }
+               .ballEntry {
+                    border-bottom: 1px dashed #c9a98a;
+                    padding: 10px 0;
+                    font-size: 15px;
+               }
+               .ballEntry:last-child { 
+                    border-bottom: none;
+               }
+
+               .ballEntry .meta {
+                    font-size: 12px;
+                    opacity: 0.6;
+                    margin-top: 4px;
+               }
+               #historyPopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #f7b6c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+               @keyframes jarGlow {
+                    0%, 100% { 
+                         box-shadow: 0 0 0 rgba(255,140,170,0); 
+                    }
+                    50% { 
+                         box-shadow: 0 0 22px 6px rgba(255,140,170,0.75);
+                    }
+               }
+               .jar.has-balls {
+                    animation: jarGlow 2.4s ease-in-out infinite;
+               }
+               @keyframes ballFly {
+                    0% { 
+                         transform: translate(-50%, -50%) scale(0.2); opacity: 0;
+                    }
+                    35% { 
+                         transform: translate(-50%, -160%) scale(1.1); opacity: 1;
+                    }
+                    100% { 
+                         transform: translate(-50%, -50%) scale(0); opacity: 0;
+                    }
+               }
+               .flyingBall {
+                    position: fixed;
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 50%;
+                    background: radial-gradient(circle at 35% 30%, #fff, #ff8caa 55%, #e05a80);
+                    box-shadow: 0 0 18px 6px rgba(255,140,170,0.85);
+                    box-shadow: 0 0 40px 14px rgba(255,140,170,0.45);
+                    pointer-events: none;
+                    z-index: 60;
+                    animation: ballFly 900ms ease-out forwards;
+               }
+               #backBtn {
+                    position: absolute;
+                    left: 24px;
+                    bottom: 24px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 15px;
+                    padding: 10px 18px;
+                    background: #fff;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 999px;
+                    cursor:pointer;
+               }
+          </style>
+     </head>
+     <body>
+          <div id = "scene"> 
+               <div id = "shelf"></div>
+               <div id = "popout">
+             <p class = "question"> What bars would you like to select? </p>
+             <div id = "jars"> 
+                <div class="jar" data-bar="sad">sad</div>
+                <div class="jar" data-bar="happy">happy</div>
+                <div class="jar" data-bar="envy">envy</div>
+                <div class="jar" data-bar="angry">angry</div>
+                <div class="jar" data-bar="lonely">lonely</div>
+                <div class="jar" data-bar="disgust">disgust</div>
+             </div> 
+             <button id ="done"> that's me! </button>
+          </div>
+     </div>
+     <div id = "ballPopout" class = "hidden">
+     <p id = "ballPopoutTitle"></p>
+     <button id = "thrownBallBtn"> Throw a ball </button>
+     <button id = "seeBallsBtn"> See pervious balls</button>
+     <button id = "closeBallPopout"> close </button>
+     </div>
+     <div id = "notePopout" class ="hidden">
+          <p id = "noteTitle"></p>
+          <textarea id = "noteInput" placeholder ="type your note for the emotion :3"></textarea>
+          <button id = "saveBallBtn"> throw </button>
+          <button id = "cancelnoteBtn"> Cancel?</button>
+     </div>
+     <div id ="historyPopout" class = "hidden">
+          <p> Your other balls: </p>
+          <div id = "historyList"></div>
+          <button id = "closeHistory"> Close </button>
+     </div>
+
+     </div>
+     <div id = "desk">
+          <div id ="deskTable"></div>
+          <div class ="poster" style = "--r:-5deg; left:6%; top:5%; width:140px; height: 195px; background-image:url('claude.jpg');"></div>
+          <div class ="poster" style = "--r:4deg; left:15%; top:26%; width:110px; height: 150px; background-image:url('penelope.jpg');"></div>
+          <div class ="poster" style = "--r:-4deg; left:70%;top:6%; width:115px; height: 160px; background-image:url('newjeans.jpg');"></div>
+          <div class="poster" style="--r:3deg;  left:81%;   top:3%; width:125px; height:175px; background-image:url('furina.jpg');"></div>
+          <div class="poster" style="--r:6deg;  left:88%; top:22%; width:105px; height:145px; background-image:url('tbhk.jpg');"></div>
+          <button id = "backBtn"> Add or remove moods! </button>
+
+
+
+     </div>
+     <script>
+          function renderShelf (picked) {
+               const shelf = document.getElementById("shelf");
+               shelf.innerHTML = "";
+               picked.forEach(name =>  {
+                    const chip = document.createElement("div");
+                    chip.className = "chip";
+                    chip.textContent = name;
+                    shelf.appendChild(chip);
+               });
+          }
+          function renderDesk(picked) {
+               const desk = document.getElementById("deskTable");
+               desk.querySelectorAll(".deskjar").forEach(el => el.remove());
+               const spots = [
+                    {left: "14%", top: "42%", r: "-6deg"},
+                    {left: "28%", top: "52%", r: "4deg"},
+                    {left: "42%", top: "40%", r: "-3deg"},
+                    {left: "56%", top: "50%", r: "5deg"},
+                    {left: "70%", top: "41%", r: "-4deg"},
+                    {left: "84%", top: "51%", r: "3deg"}
+               ];
+               picked.forEach((name, i)=> {
+                    const jar = document.createElement("div");
+                    jar.className= "deskjar";
+                    jar.style.left = spots[i].left;
+                    jar.style.top = spots[i].top;
+                    jar.style.setProperty("--r", spots[i].r);
+                    jar.innerHTML = `<div class="fill"></div><span>${name}</span>`;
+                    desk.appendChild(jar);
+                    jar.dataset.bar = name;
+                    jar.addEventListener("click",() => {
+                         currentEmotion = name;
+                         document.getElementById("ballPopoutTitle").textContent = name;
+                         ballPopout.classList.remove("hidden");
+                    });
+               });
+          }
+          function saveMoods() {
+               const picked = [...document.querySelectorAll(".jar.selected")]
+                .map(jar => jar.dataset.bar);
+                localStorage.setItem("moods", JSON.stringify(picked));
+                renderShelf(picked);
+                renderDesk(picked);
+          }
+
+          const jars = document.querySelectorAll(".jar");
+          jars.forEach(jar => {
+               jar.addEventListener("click", () => {
+                    jar.classList.toggle("selected");
+                    saveMoods()
+               });
+          });
+          document.getElementById("done").addEventListener("click", () => {
+               document.getElementById("scene").style.display = "none";
+               document.getElementById("desk").classList.add("show");
+               document.getElementById("backBtn").onclick =() => {
+                    document.getElementById("desk").classList.remove("show");
+                    document.getElementById("scene").style.display = "flex";
+               };
+          });
+          const saved = JSON.parse(localStorage.getItem("moods") || "[]");
+          saved.forEach(name => {
+              const jar = document.querySelector(`.jar[data-bar="${name}"]`);
+              if (jar) jar.classList.add("selected");
+          });
+          renderShelf(saved);
+          renderDesk(saved);
+
+          const ballPopout = document.getElementById("ballPopout");
+          let currentEmotion = null;
+
+          document.getElementById("closeBallPopout").onclick = () => {
+               ballPopout.classList.add("hidden");
+          }
+          
+          const notePopout = document.getElementById("notePopout");
+          document.getElementById("thrownBallBtn").onclick = () => {
+               ballPopout.classList.add("hidden");
+               document.getElementById("noteTitle").textContent = 
+               "Why is this ball in " + currentEmotion + "?";
+               document.getElementById("noteInput").value = "";
+               notePopout.classList.remove("hidden");  
+          };
+
+          document.getElementById("cancelnoteBtn").onclick = () => {
+               notePopout.classList.add("hidden");
+          }
+          const BALLS_KEY ="moodJarBalls";
+          function getBalls(){
+               return JSON.parse(localStorage.getItem(BALLS_KEY) || "[]");
+
+          }
+          function saveBalls(balls) {
+               localStorage.setItem(BALLS_KEY, JSON.stringify(balls));
+          }
+          document.getElementById("saveBallBtn").onclick = () => {
+               const note = document.getElementById("noteInput").value.trim();
+               if (!note) return;
+
+               const balls = getBalls();
+               balls.unshift({
+                    emotion: currentEmotion,
+                    note: note,
+                    date: new Date().toLocaleString()
+               });
+               saveBalls(balls);
+               notePopout.classList.add("hidden");
+               spawnGlowingBall(currentEmotion);
+               markJars();
+          };
+
+          const historyPopout = document.getElementById("historyPopout");
+
+          document.getElementById("seeBallsBtn").onclick = () => {
+               ballPopout.classList.add("hidden");
+               renderHistory();
+               historyPopout.classList.remove("hidden");
+          };
+          document.getElementById("closeHistory").onclick = () => {
+               historyPopout.classList.add("hidden");
+          };
+          function escapeHtml(s) {
+     return s.replace(/[&<>"']/g, c => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+     }[c]));
+}
+          function renderHistory() {
+               const list = document.getElementById("historyList");
+               const balls = getBalls();
+               if (!balls.length) {
+                    list.innerHTML = "<p> no balls yet - go throw one. </p>";
+                    return;
+               }
+               list.innerHTML = balls.map(b => `
+                    <div class="ballEntry">
+                         <strong>${b.emotion}</strong> - ${escapeHtml(b.note)}
+                         <div class = "meta">${b.date}</div>
+                    </div>
+               `).join("");
+          
+          }
+          function spawnGlowingBall(emotion) {
+               const jar = [...document.querySelectorAll(".jar")]
+               .find(j => (j.dataset.bar || j.textContent.trim()) === emotion);
+               if (!jar) return;
+
+               const rect = jar.getBoundingClientRect();
+               const ball = document.createElement("div");
+               ball.className = "flyingBall";
+               ball.style.left = (rect.left + rect.width / 2) + "px";
+               ball.style.top = (rect.top + rect.height / 2) + "px";
+               document.body.appendChild(ball);
+               setTimeout(() => ball.remove(), 950);
+          }
+
+          function markJars() {
+               const balls = getBalls();
+               document.querySelectorAll(".jar").forEach(jar => {
+                    const emotion = jar.dataset.bar;
+                    jar.classList.toggle("has-balls", balls.some(b => b.emotion === emotion));
+               });
+          }
+          markJars();
+
+
+     </script>
+
+     </body>
+</html>
