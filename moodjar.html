@@ -201,6 +201,164 @@
                     position: relative;
                     z-index: 1
                }
+               #ballPopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    font-family: "Shantell Sans", cursive;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+               }
+               #ballPopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #f7b6c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+               .hidden {
+                    display: none !important; 
+               }
+               #notePopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    width: min(360px, 90vw);
+                    font-family: "Shantell Sans", sans-serif;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+               }
+               #notePopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #fb76c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+
+               #noteInput {
+                    font-family: "Shantell Sans", sans-serif;
+                    font-size: 15px;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 14px;
+                    padding: 10px;
+                    min-height: 90px;
+                    resize: none;
+                    background: #fffdfa;
+                    outline: none;
+               }
+               #historyPopout {
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: #fdf6ee;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 20px;
+                    padding: 24px;
+                    z-index: 50;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                    width: min(420px, 90vw);
+                    font-family: "Shantell Sans", sans-serif;
+                    box-shadow: 0 10px 30px  rgba(0,0,0,0.15);
+               }
+               #historyPopout > p {
+                    margin: 0;
+                    font-size: 18px;
+               }
+
+               #historyList {
+                    overflow-y: auto;
+                    max-height: 50vh;
+               }
+               .ballEntry {
+                    border-bottom: 1px dashed #c9a98a;
+                    padding: 10px 0;
+                    font-size: 15px;
+               }
+               .ballEntry:last-child { 
+                    border-bottom: none;
+               }
+
+               .ballEntry .meta {
+                    font-size: 12px;
+                    opacity: 0.6;
+                    margin-top: 4px;
+               }
+               #historyPopout button {
+                    font-family: "Shantell Sans", sans-serif;
+                    background: #f7b6c2;
+                    border: 3px solid #2b2b2b;
+                    border-radius: 999px;
+                    padding: 10px 18px;
+                    cursor: pointer;
+               }
+               @keyframes jarGlow {
+                    0%, 100% { 
+                         box-shadow: 0 0 0 rgba(255,140,170,0); 
+                    }
+                    50% { 
+                         box-shadow: 0 0 22px 6px rgba(255,140,170,0.75);
+                    }
+               }
+               .jar.has-balls {
+                    animation: jarGlow 2.4s ease-in-out infinite;
+               }
+               @keyframes ballFly {
+                    0% { 
+                         transform: translate(-50%, -50%) scale(0.2); opacity: 0;
+                    }
+                    35% { 
+                         transform: translate(-50%, -160%) scale(1.1); opacity: 1;
+                    }
+                    100% { 
+                         transform: translate(-50%, -50%) scale(0); opacity: 0;
+                    }
+               }
+               .flyingBall {
+                    position: fixed;
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 50%;
+                    background: radial-gradient(circle at 35% 30%, #fff, #ff8caa 55%, #e05a80);
+                    box-shadow: 0 0 18px 6px rgba(255,140,170,0.85);
+                    box-shadow: 0 0 40px 14px rgba(255,140,170,0.45);
+                    pointer-events: none;
+                    z-index: 60;
+                    animation: ballFly 900ms ease-out forwards;
+               }
+               #backBtn {
+                    position: absolute;
+                    left: 24px;
+                    bottom: 24px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 15px;
+                    padding: 10px 18px;
+                    background: #fff;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 999px;
+                    cursor:pointer;
+               }
           </style>
      </head>
      <body>
@@ -219,6 +377,25 @@
              <button id ="done"> that's me! </button>
           </div>
      </div>
+     <div id = "ballPopout" class = "hidden">
+     <p id = "ballPopoutTitle"></p>
+     <button id = "thrownBallBtn"> Throw a ball </button>
+     <button id = "seeBallsBtn"> See pervious balls</button>
+     <button id = "closeBallPopout"> close </button>
+     </div>
+     <div id = "notePopout" class ="hidden">
+          <p id = "noteTitle"></p>
+          <textarea id = "noteInput" placeholder ="type your note for the emotion :3"></textarea>
+          <button id = "saveBallBtn"> throw </button>
+          <button id = "cancelnoteBtn"> Cancel?</button>
+     </div>
+     <div id ="historyPopout" class = "hidden">
+          <p> Your other balls: </p>
+          <div id = "historyList"></div>
+          <button id = "closeHistory"> Close </button>
+     </div>
+
+     </div>
      <div id = "desk">
           <div id ="deskTable"></div>
           <div class ="poster" style = "--r:-5deg; left:6%; top:5%; width:140px; height: 195px; background-image:url('claude.jpg');"></div>
@@ -226,6 +403,7 @@
           <div class ="poster" style = "--r:-4deg; left:70%;top:6%; width:115px; height: 160px; background-image:url('newjeans.jpg');"></div>
           <div class="poster" style="--r:3deg;  left:81%;   top:3%; width:125px; height:175px; background-image:url('furina.jpg');"></div>
           <div class="poster" style="--r:6deg;  left:88%; top:22%; width:105px; height:145px; background-image:url('tbhk.jpg');"></div>
+          <button id = "backBtn"> Add or remove moods! </button>
 
 
 
@@ -260,6 +438,12 @@
                     jar.style.setProperty("--r", spots[i].r);
                     jar.innerHTML = `<div class="fill"></div><span>${name}</span>`;
                     desk.appendChild(jar);
+                    jar.dataset.bar = name;
+                    jar.addEventListener("click",() => {
+                         currentEmotion = name;
+                         document.getElementById("ballPopoutTitle").textContent = name;
+                         ballPopout.classList.remove("hidden");
+                    });
                });
           }
           function saveMoods() {
@@ -280,6 +464,10 @@
           document.getElementById("done").addEventListener("click", () => {
                document.getElementById("scene").style.display = "none";
                document.getElementById("desk").classList.add("show");
+               document.getElementById("backBtn").onclick =() => {
+                    document.getElementById("desk").classList.remove("show");
+                    document.getElementById("scene").style.display = "flex";
+               };
           });
           const saved = JSON.parse(localStorage.getItem("moods") || "[]");
           saved.forEach(name => {
@@ -288,6 +476,104 @@
           });
           renderShelf(saved);
           renderDesk(saved);
+
+          const ballPopout = document.getElementById("ballPopout");
+          let currentEmotion = null;
+
+          document.getElementById("closeBallPopout").onclick = () => {
+               ballPopout.classList.add("hidden");
+          }
+          
+          const notePopout = document.getElementById("notePopout");
+          document.getElementById("thrownBallBtn").onclick = () => {
+               ballPopout.classList.add("hidden");
+               document.getElementById("noteTitle").textContent = 
+               "Why is this ball in " + currentEmotion + "?";
+               document.getElementById("noteInput").value = "";
+               notePopout.classList.remove("hidden");  
+          };
+
+          document.getElementById("cancelnoteBtn").onclick = () => {
+               notePopout.classList.add("hidden");
+          }
+          const BALLS_KEY ="moodJarBalls";
+          function getBalls(){
+               return JSON.parse(localStorage.getItem(BALLS_KEY) || "[]");
+
+          }
+          function saveBalls(balls) {
+               localStorage.setItem(BALLS_KEY, JSON.stringify(balls));
+          }
+          document.getElementById("saveBallBtn").onclick = () => {
+               const note = document.getElementById("noteInput").value.trim();
+               if (!note) return;
+
+               const balls = getBalls();
+               balls.unshift({
+                    emotion: currentEmotion,
+                    note: note,
+                    date: new Date().toLocaleString()
+               });
+               saveBalls(balls);
+               notePopout.classList.add("hidden");
+               spawnGlowingBall(currentEmotion);
+               markJars();
+          };
+
+          const historyPopout = document.getElementById("historyPopout");
+
+          document.getElementById("seeBallsBtn").onclick = () => {
+               ballPopout.classList.add("hidden");
+               renderHistory();
+               historyPopout.classList.remove("hidden");
+          };
+          document.getElementById("closeHistory").onclick = () => {
+               historyPopout.classList.add("hidden");
+          };
+          function escapeHtml(s) {
+     return s.replace(/[&<>"']/g, c => ({
+          "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+     }[c]));
+}
+          function renderHistory() {
+               const list = document.getElementById("historyList");
+               const balls = getBalls();
+               if (!balls.length) {
+                    list.innerHTML = "<p> no balls yet - go throw one. </p>";
+                    return;
+               }
+               list.innerHTML = balls.map(b => `
+                    <div class="ballEntry">
+                         <strong>${b.emotion}</strong> - ${escapeHtml(b.note)}
+                         <div class = "meta">${b.date}</div>
+                    </div>
+               `).join("");
+          
+          }
+          function spawnGlowingBall(emotion) {
+               const jar = [...document.querySelectorAll(".jar")]
+               .find(j => (j.dataset.bar || j.textContent.trim()) === emotion);
+               if (!jar) return;
+
+               const rect = jar.getBoundingClientRect();
+               const ball = document.createElement("div");
+               ball.className = "flyingBall";
+               ball.style.left = (rect.left + rect.width / 2) + "px";
+               ball.style.top = (rect.top + rect.height / 2) + "px";
+               document.body.appendChild(ball);
+               setTimeout(() => ball.remove(), 950);
+          }
+
+          function markJars() {
+               const balls = getBalls();
+               document.querySelectorAll(".jar").forEach(jar => {
+                    const emotion = jar.dataset.bar;
+                    jar.classList.toggle("has-balls", balls.some(b => b.emotion === emotion));
+               });
+          }
+          markJars();
+
+
      </script>
 
      </body>
