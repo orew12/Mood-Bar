@@ -128,7 +128,7 @@
                     display: block;
                }
                #deskTable {
-                    position: absolute;
+                    position: relative;
                     left: 50%; top: 50%;
                     transform: translate(-50%, -50%);
                     width: 620px;
@@ -138,6 +138,7 @@
                     box-shadow: 0 40px 60px -20px rgba(90,55,30,.45),
                     inset 0 2px 0 rgba(255,255,255,.35),
                     inset 0 -8px 2px rgba(0,0,0,.15);
+                    overflow: hidden;
                }
                #deskTable::before {
                     content: "";
@@ -147,13 +148,13 @@
                     background: 
                     repeating-linear-gradient(92deg, rgba(120,70,40,.14) 0 2px, transparent 2px 26px),
                     repeating-linear-gradient(88deg, rgba(255,255,255,0.7) 0 1px, transparent 1px 40px);
-                    opacity: .8s;
+                    opacity: 0.8;
                }
                .poster {
                     position: absolute;
                     border: 6px solid #fff;
                     border-radius: 4px;
-                    box-shadow: 0 8px 18px rbga(80,50,30,.22);
+                    box-shadow: 0 8px 18px rgba(80,50,30,.22);
                     background-size: cover;
                     background-position: center;
                     transform: rotate(var(--r));
@@ -165,9 +166,40 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-family: "Shantell Sans", crusive;
+                    font-family: "Shantell Sans", cursive;
                     font-size: 14px;
                     color: #b08a68;
+               }
+               .deskjar {
+                    position: absolute;
+                    width: 70px;
+                    height: 90px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 8px 8px 14px 14px;
+                    background: #fdf6ee;
+                    overflow: hidden;
+                    display: flex;
+                    align-items: flex-end;
+                    justify-content: center;
+                    padding-bottom: 8px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 14px;
+                    color: #1a1a1a;
+                    box-shadow: 0 8px 16px rgba(80,50,30,.18);
+                    transform: rotate(var(--r));
+               }
+               .deskjar .fill {
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 100%;
+                    background: #f4a6b8;
+                    z-index: 0;
+               }
+               .deskjar span {
+                    position: relative;
+                    z-index: 1
                }
           </style>
      </head>
@@ -209,12 +241,35 @@
                     shelf.appendChild(chip);
                });
           }
+          function renderDesk(picked) {
+               const desk = document.getElementById("deskTable");
+               desk.querySelectorAll(".deskjar").forEach(el => el.remove());
+               const spots = [
+                    {left: "14%", top: "42%", r: "-6deg"},
+                    {left: "28%", top: "52%", r: "4deg"},
+                    {left: "42%", top: "40%", r: "-3deg"},
+                    {left: "56%", top: "50%", r: "5deg"},
+                    {left: "70%", top: "41%", r: "-4deg"},
+                    {left: "84%", top: "51%", r: "3deg"}
+               ];
+               picked.forEach((name, i)=> {
+                    const jar = document.createElement("div");
+                    jar.className= "deskjar";
+                    jar.style.left = spots[i].left;
+                    jar.style.top = spots[i].top;
+                    jar.style.setProperty("--r", spots[i].r);
+                    jar.innerHTML = `<div class="fill"></div><span>${name}</span>`;
+                    desk.appendChild(jar);
+               });
+          }
           function saveMoods() {
                const picked = [...document.querySelectorAll(".jar.selected")]
                 .map(jar => jar.dataset.bar);
                 localStorage.setItem("moods", JSON.stringify(picked));
                 renderShelf(picked);
+                renderDesk(picked);
           }
+
           const jars = document.querySelectorAll(".jar");
           jars.forEach(jar => {
                jar.addEventListener("click", () => {
@@ -231,7 +286,8 @@
               const jar = document.querySelector(`.jar[data-bar="${name}"]`);
               if (jar) jar.classList.add("selected");
           });
-          rendershelf(saved);
+          renderShelf(saved);
+          renderDesk(saved);
      </script>
 
      </body>
