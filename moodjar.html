@@ -30,12 +30,28 @@
                     color: #1a1a1a;
                     text-align: center;
                }
+               #popout.closed {
+                    position: absolute;
+                    top: 24px;
+                    left: 24px;
+                    width: auto;
+                    padding: 12px 18px;
+                    font-size:15px;
+                    opacity: 0.85;
+               }
+               #popout.closed #jars, #popout.closed #done, #popout.closed .question {
+                    display: none;
+               }
+               #popout.closed #done {
+                    display: none;
+               }
                #jars {
                     display: flex;
                     justify-content: center;
                     gap: 18px;
                     margin-top: 30px;
                }
+
                .jar {
                     width: 70px;
                     height: 90px;
@@ -49,6 +65,8 @@
                     font-size: 14px;
                     background: #fdf6ee;
                     transition: transform 0.15s ease;
+                    position: relative;
+                    overflow: hidden;
                     
                }
                .jar:hover {
@@ -56,29 +74,165 @@
                     cursor: pointer;
                     
                }
+               .jar.selected {
+                    background: #1a1a1a;
+                    color: #fff;
+
+               }
+               .jar::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    height: 0;
+                    background: #f4a6b8;
+                    transition: height 0.3s ease;
+               }
+               .jar.selected::after {
+                    height: 100%;
+               }
+               #done {
+                    margin-top: 26px;
+                    padding: 10px 24px;
+                    font-family: "Shantell Sans", cursive;
+                    font-size: 18px;
+                    background: #fff;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 30px;
+                    cursor: pointer;
+               }
+               #shelf {
+                    position: absolute; 
+                    top: 24px;
+                    right: 24px;
+                    display: flex;
+                    gap: 10px;
+                    font-family: "Shantell Sans", cursive;
+
+               }
+               #shelf .chip {
+                    padding: 8px 14px;
+                    border: 3px solid #1a1a1a;
+                    border-radius: 30px;
+                    background: #f4a6b8;
+                    font-size: 14px;
+               }
+               #desk {
+                    position: absolute;
+                    inset: 0;
+                    background: #f6e7d8;
+                    display: none;
+               }
+               #desk.show {
+                    display: block;
+               }
+               #deskTable {
+                    position: absolute;
+                    left: 50%; top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 620px;
+                    height: 380px;
+                    background: linear-gradient(170deg, #d8a97a, #c08a5c 60%, #a9724a);
+                    border-radius: 22px;
+                    box-shadow: 0 40px 60px -20px rgba(90,55,30,.45),
+                    inset 0 2px 0 rgba(255,255,255,.35),
+                    inset 0 -8px 2px rgba(0,0,0,.15);
+               }
+               #deskTable::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius:22px;
+                    background: 
+                    repeating-linear-gradient(92deg, rgba(120,70,40,.14) 0 2px, transparent 2px 26px),
+                    repeating-linear-gradient(88deg, rgba(255,255,255,0.7) 0 1px, transparent 1px 40px);
+                    opacity: .8s;
+               }
+               .poster {
+                    position: absolute;
+                    border: 6px solid #fff;
+                    border-radius: 4px;
+                    box-shadow: 0 8px 18px rbga(80,50,30,.22);
+                    background-size: cover;
+                    background-position: center;
+                    transform: rotate(var(--r));
+               }
+               .poster-slot {
+                    position: absolute;
+                    border: 2px dashed #c9a98c;
+                    border-radius: 6px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-family: "Shantell Sans", crusive;
+                    font-size: 14px;
+                    color: #b08a68;
+               }
           </style>
      </head>
      <body>
           <div id = "scene"> 
-             <div id = "popout"> What bars would you like to select? 
+               <div id = "shelf"></div>
+               <div id = "popout">
+             <p class = "question"> What bars would you like to select? </p>
              <div id = "jars"> 
                 <div class="jar" data-bar="sad">sad</div>
                 <div class="jar" data-bar="happy">happy</div>
-                <div class="jar" data-bar ="envy">envy</div>
+                <div class="jar" data-bar="envy">envy</div>
                 <div class="jar" data-bar="angry">angry</div>
                 <div class="jar" data-bar="lonely">lonely</div>
-                <div class="jar" data-bar="disghust">disghust</div>
+                <div class="jar" data-bar="disgust">disgust</div>
              </div> 
+             <button id ="done"> that's me! </button>
           </div>
      </div>
+     <div id = "desk">
+          <div id ="deskTable"></div>
+          <div class ="poster" style = "--r:-5deg; left:6%; top:5%; width:140px; height: 195px; background-image:url('claude.jpg');"></div>
+          <div class ="poster" style = "--r:4deg; left:15%; top:26%; width:110px; height: 150px; background-image:url('penelope.jpg');"></div>
+          <div class ="poster" style = "--r:-4deg; left:70%;top:6%; width:115px; height: 160px; background-image:url('newjeans.jpg');"></div>
+          <div class="poster" style="--r:3deg;  left:81%;   top:3%; width:125px; height:175px; background-image:url('furina.jpg');"></div>
+          <div class="poster" style="--r:6deg;  left:88%; top:22%; width:105px; height:145px; background-image:url('tbhk.jpg');"></div>
+
+
+
+     </div>
      <script>
-          const jars = document.qureyselector(".jar");
+          function renderShelf (picked) {
+               const shelf = document.getElementById("shelf");
+               shelf.innerHTML = "";
+               picked.forEach(name =>  {
+                    const chip = document.createElement("div");
+                    chip.className = "chip";
+                    chip.textContent = name;
+                    shelf.appendChild(chip);
+               });
+          }
+          function saveMoods() {
+               const picked = [...document.querySelectorAll(".jar.selected")]
+                .map(jar => jar.dataset.bar);
+                localStorage.setItem("moods", JSON.stringify(picked));
+                renderShelf(picked);
+          }
+          const jars = document.querySelectorAll(".jar");
           jars.forEach(jar => {
                jar.addEventListener("click", () => {
-                    console.log(jar.dataset.bar);
+                    jar.classList.toggle("selected");
+                    saveMoods()
                });
           });
-
+          document.getElementById("done").addEventListener("click", () => {
+               document.getElementById("scene").style.display = "none";
+               document.getElementById("desk").classList.add("show");
+          });
+          const saved = JSON.parse(localStorage.getItem("moods") || "[]");
+          saved.forEach(name => {
+              const jar = document.querySelector(`.jar[data-bar="${name}"]`);
+              if (jar) jar.classList.add("selected");
+          });
+          rendershelf(saved);
+     </script>
 
      </body>
 </html>
