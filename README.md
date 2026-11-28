@@ -19,3 +19,6 @@ I made it for myself and those who dont have anyone to vent or share their happi
 ## TO RUN IT:
 just play it on the live browswer on the demo link! It will save it :)
 DEMO URL: https://orew12.github.io/Mood-Bar/
+
+## AI USAGE:
+- AI WAS USED TO HELP ME WITH SOME HARD ASPECTS OF THE WEBSITE, IT WAS ALSO USED TO HELP GUIDE ME BY GIVING ME HINTS AND HOW IT WORKS RATHER THEN GIVING ME THE CODE ITSELF!
