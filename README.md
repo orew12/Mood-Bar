@@ -7,7 +7,7 @@ https://orew12.github.io/Mood-Bar/
 ## WHAT IS MOOD BAR?
 -> mood bar is a website where you can throw in balls and write down a feeling alongside it,it has total of 6 emotions that cover every other emotion and tracks your emotions daily.
 ## LANGUAGES USED FOR MOOD BAR
-- THE LANGUAGE USED FOR MOOD BAR IS HTML + a tiny bit of java!
+- THE LANGUAGE USED FOR MOOD BAR IS HTML + a tiny bit of javascript + css!
 <img width="959" height="437" alt="Screenshot 2026-11-28 121944" src="https://github.com/user-attachments/assets/7da02d24-9747-48fc-a768-721c2be0217e" />
 
 ## HOW IT WAS MADE;
@@ -18,6 +18,7 @@ I made it for myself and those who dont have anyone to vent or share their happi
 
 ## TO RUN IT:
 just play it on the live browswer on the demo link! It will save it :)
+-> BUT TO START IT IS TO RUN IT IS TO OPEN INDEX.HTML
 DEMO URL: https://orew12.github.io/Mood-Bar/
 
 ## AI USAGE:
